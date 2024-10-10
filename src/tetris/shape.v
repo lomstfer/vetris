@@ -108,9 +108,10 @@ fn (s Shape) get_units() []Unit {
 }
 
 fn (mut s Shape) try_rotate(world_units []Unit) {
+	prev_rot := s.rotation
 	s.rotation = (s.rotation + 1) % s.units.len
 	if s.is_outside_game_view() || s.overlaps_world_unit(world_units) {
-		s.rotation = math.abs(s.rotation - 1) % s.units.len
+		s.rotation = prev_rot
 	}
 }
 
@@ -162,7 +163,7 @@ fn (s Shape) overlaps_world_unit(world_units []Unit) bool {
 
 fn (s Shape) is_outside_game_view() bool {
 	for u in s.get_units() {
-		if s.x + u.x < 0 || s.x + u.x >= constants.game_width {
+		if s.x + u.x < 0 || s.x + u.x >= constants.game_width || s.y + u.y >= constants.game_height {
 			return true
 		}
 	}
